@@ -6,8 +6,8 @@
 #include "Arduino.h"
 #include "SoilMoisture.h"
 //---------------------------------Firebase info---------------------
-#define FIREBASE_HOST "iot-green-house.firebaseio.com"
-#define FIREBASE_AUTH "NvcMFPWJsqHqhmIPii2DwWIdaJGIdwPfex0fs8cl"
+#define FIREBASE_HOST "yours"
+#define FIREBASE_AUTH "yours"
 //---------------------------------Wifi INFO--------------------------
 #define WIFI_SSID "boom"
 #define WIFI_PASSWORD "12345678"
