@@ -6,8 +6,8 @@
 #include "Arduino.h"
 #include "SoilMoisture.h"
 //---------------------------------Firebase info---------------------
-#define FIREBASE_HOST "yours"
-#define FIREBASE_AUTH "yours"
+#define FIREBASE_HOST "iot-green-house.firebaseio.com"
+#define FIREBASE_AUTH "NvcMFPWJsqHqhmIPii2DwWIdaJGIdwPfex0fs8cl"
 //---------------------------------Wifi INFO--------------------------
 #define WIFI_SSID "boom"
 #define WIFI_PASSWORD "12345678"
@@ -24,11 +24,7 @@ int soilMoistureValue = 0;
 String BtnPumpMan = "0";
 String BtnFun = "0";
 String BtnLamp="0";
-String SBtnPumpMan = "0";
-String SBtnFun = "0";
-String SBtnLamp="0";
 String Manual = "0";
-String SManual = "0";
 //--------------------------------------Void seup-----------------------------
 void setup() {
   //Serial Begin at 9600 Baud
@@ -54,12 +50,10 @@ void loop() {
   float t = dht.readTemperature();   // Read temperature as Celsius (the default)
    //------------------------------- BTN start pump Manual----------------------------------------
   BtnPumpMan = Firebase.getString("onpump");
-  SBtnPumpMan = Firebase.getString("site/spump");
   Manual = Firebase.getString("Manual");
-  SManual = Firebase.getString("SManual");
 
-       if((Manual == "1")^(SManual == "1")  ) {
-        if((BtnPumpMan == "1")^(SBtnPumpMan =="1")){
+       if(Manual == "1"  ) {
+        if(BtnPumpMan == "1"){
            Serial.println("Pump active manual");
            digitalWrite(5,LOW);
                               }
@@ -69,7 +63,6 @@ void loop() {
               }
                                                  }else {
  //---------------------Soil sensor + pump ------------------------------------
-delay(2000);
 soilMoistureValue = analogRead(A0);
   Serial.println(soilMoistureValue);
 
@@ -87,9 +80,9 @@ soilMoistureValue = analogRead(A0);
             }
                                                  }
 //------------------------------- BTN Lamp ----------------------------------------
-  BtnLamp  = Firebase.getString("onlamp");
-    SBtnLamp  = Firebase.getString("site/slight");
-        if((BtnLamp == "1")^(SBtnLamp =="1")){
+  BtnLamp  = Firebase.getString("onlight");
+    
+        if(BtnLamp == "1"){
            Serial.println("Lamp  active (ON)");
            digitalWrite(12,LOW);
                               }
@@ -98,9 +91,8 @@ soilMoistureValue = analogRead(A0);
            digitalWrite(12,HIGH);
               }
 //------------------------------- BTN Fun ----------------------------------------
-  BtnFun  = Firebase.getString("onfun");
-  SBtnFun  = Firebase.getString("/site/sfun");
-        if((BtnFun  == "1")^(SBtnFun == "1")){
+  BtnFun  = Firebase.getString("onfan");
+        if(BtnFun  == "1"){
            Serial.println("Fun active (ON)");
            digitalWrite(4,LOW);
                               }
@@ -117,7 +109,7 @@ soilMoistureValue = analogRead(A0);
  if (!(isnan(h) || isnan(t))) {
 Firebase.setFloat("t", t);
 Firebase.setFloat("h", h);
- delay(2000);
+
  Firebase.pushString("/measures/temp", fireTemp);
   Firebase.pushString("/measures/hum", fireHumid);
   }
